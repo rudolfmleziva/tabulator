@@ -14,4 +14,22 @@ jobs:
     - name: Install modules
       run: npm install
     - name: Run tests
-      run: npm run test:unit
+      id: tests
+      run: |
+        set -o pipefail
+        npm run test:coverage | tee "$RUNNER_TEMP/jest-output.txt"
+    - name: Coverage summary
+      if: ${{ !cancelled() && steps.tests.outcome != 'skipped' }}
+      run: |
+        {
+          echo '### Unit test coverage'
+          echo '```text'
+          sed -n '/ Coverage summary /,/^=*$/p' "$RUNNER_TEMP/jest-output.txt"
+          echo '```'
+        } >> "$GITHUB_STEP_SUMMARY"
+    - uses: actions/upload-artifact@v4
+      if: ${{ !cancelled() && steps.tests.outcome != 'skipped' }}
+      with:
+        name: coverage-report
+        path: coverage/
+        retention-days: 30
