@@ -30,6 +30,7 @@ dependencies. Docs/demos live at <http://tabulator.info>.
 ## Commands
 
 - `npm run test:unit` – Jest only (fast, jsdom).
+- `npm run test:coverage` – Jest with a coverage report in `coverage/`.
 - `npm run test:e2e` – builds then runs Playwright.
 - `npm test` – both.
 - `npm run lint` – ESLint over `src/`, with `--fix`.
